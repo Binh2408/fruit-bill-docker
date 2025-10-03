@@ -1,0 +1,41 @@
+version: '3.8'
+services:
+  mysql-db:
+    image: mysql:8
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: codegym
+      MYSQL_DATABASE: fruit_billing
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - springboot-network
+
+  backend:
+    image: binh2408/fruit-billing-backend:1.0
+    container_name: springboot-app
+    depends_on:
+      - mysql-db
+    ports:
+      - "8080:8080"
+    networks:
+      - springboot-network
+
+  frontend:
+    image: binh2408/fruit-billing-frontend:1.0
+    container_name: react-app
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+    networks:
+      - springboot-network
+
+volumes:
+  mysql_data:
+
+networks:
+  springboot-network:
