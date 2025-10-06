@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   mysql-db:
     image: mysql:8
@@ -9,8 +10,6 @@ services:
       MYSQL_DATABASE: fruit_billing
     ports:
       - "3307:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
     networks:
       - springboot-network
 
@@ -19,6 +18,10 @@ services:
     container_name: springboot-app
     depends_on:
       - mysql-db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/fruit_billing
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: codegym
     ports:
       - "8080:8080"
     networks:
@@ -34,8 +37,6 @@ services:
     networks:
       - springboot-network
 
-volumes:
-  mysql_data:
-
 networks:
   springboot-network:
+    driver: bridge
